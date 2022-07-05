@@ -24,4 +24,12 @@ class Apartment extends Model
     {
         return $this->belongsTo(User::class, 'caretaker_id');
     }
+
+    /**
+     * Relationship between the apartment and the houses
+     */
+    public function houses () 
+    {
+        return $this->hasMany(House::class, 'apartment_id');
+    }
 }

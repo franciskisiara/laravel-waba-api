@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreHouseRequest;
 use App\Models\Apartment;
+use App\Models\House;
 use Illuminate\Http\Request;
 
 class HouseController extends Controller
@@ -24,9 +25,17 @@ class HouseController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreHouseRequest $request)
+    public function store(StoreHouseRequest $request, Apartment $apartment)
     {
-        $apartment = Apartment::where('caretaker_id', $request->user()->id)->first();   
+        $house = House::create([
+            'apartment_id' => $apartment->id,
+            'house_number' => $request->house_number, 
+        ]);
+
+        return response()->json([
+            'data' => $house,
+            'message' => 'House details saved successfully',
+        ]);
     }
 
     /**

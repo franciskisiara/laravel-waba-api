@@ -34,9 +34,11 @@ Route::middleware('auth:sanctum')->group(function () {
         'store',
     ]);
 
-    Route::resource('houses', HouseController::class)->only([
-        'store',
-    ]);
+    Route::prefix('apartments/{apartment}')->group(function () {
+        Route::resource('houses', HouseController::class)->only([
+            'store',
+        ]);
+    });
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

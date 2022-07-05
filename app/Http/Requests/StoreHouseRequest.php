@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreHouseRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class StoreHouseRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +25,17 @@ class StoreHouseRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'house_number' => [
+                'required',
+                Rule::unique('houses')->where(function ($query) {
+                    return $query->where('apartment_id', $this->apartment->id);
+                }),
+            ],
+
+            'initial_reading' => [
+                'required',
+                'numeric',
+            ],
         ];
     }
 }
