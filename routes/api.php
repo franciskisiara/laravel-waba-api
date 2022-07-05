@@ -38,16 +38,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('apartments/{apartment}')->group(function () {
         Route::resource('houses', HouseController::class)->only([
-            'store',
+            'index', 'store',
         ]);
 
-        Route::resource('tenants', TenantController::class)->only([
-            'store',
-        ]);
+        // Route::resource('tenants', TenantController::class)->only([
+        //     'store',
+        // ]);
 
-        Route::resource('meter-readings', MeterReadingController::class)->only([
-            'store',
-        ]);
+        // Route::resource('meter-readings', MeterReadingController::class)->only([
+        //     'store',
+        // ]);
     });
 });
 

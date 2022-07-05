@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MeterReadingRequest;
+use App\Jobs\NotifyTenant;
 use App\Models\MeterReading;
-use Illuminate\Http\Request;
 
 class MeterReadingController extends Controller
 {
@@ -26,7 +26,7 @@ class MeterReadingController extends Controller
             'current_reading' => $request->current_reading,
         ]); 
 
-        //add this reading to the queue in order to be processed at night
+        NotifyTenant::dispatch($currentReading);
 
         return response()->json([
             'data' => $currentReading,

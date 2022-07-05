@@ -15,4 +15,12 @@ class MeterReading extends Model
         'current_reading',
         'communicated_at',
     ];
+
+    /**
+     * Relationship between the meter reading and the tenant
+     */
+    public function tenant ()
+    {
+        return $this->belongsTo(Tenant::class, 'tenant_id');
+    }
 }
