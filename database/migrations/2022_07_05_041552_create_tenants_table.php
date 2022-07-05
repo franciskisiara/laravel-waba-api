@@ -13,11 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('meter_readings', function (Blueprint $table) {
+        Schema::create('tenants', function (Blueprint $table) {
             $table->id();
             $table->foreignId('house_id')->constrained('houses')->onDelete('cascade');
-            $table->double('reading');
+            $table->foreignId('tenant_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('meter_readings');
+        Schema::dropIfExists('tenants');
     }
 };
