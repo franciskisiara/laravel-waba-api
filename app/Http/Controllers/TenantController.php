@@ -41,8 +41,8 @@ class TenantController extends Controller
             ]);
 
             MeterReading::create([
-                'house_id' => $request->house_id,
-                'reading' => $request->meter_reading,
+                'tenant_id' => $tenant->id,
+                'current_reading' => $request->current_reading,
             ]);
 
             return $tenant;

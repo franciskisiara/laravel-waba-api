@@ -53,7 +53,7 @@ class StoreTenantRequest extends FormRequest
                 ]
             ],
 
-            'meter_reading' => [
+            'current_reading' => [
                 'required',
                 'numeric',
             ]

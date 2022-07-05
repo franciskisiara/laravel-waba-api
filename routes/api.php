@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApartmentController;
 use App\Http\Controllers\HouseController;
+use App\Http\Controllers\MeterReadingController;
 use App\Http\Controllers\TenantController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -41,6 +42,10 @@ Route::middleware('auth:sanctum')->group(function () {
         ]);
 
         Route::resource('tenants', TenantController::class)->only([
+            'store',
+        ]);
+
+        Route::resource('meter-readings', MeterReadingController::class)->only([
             'store',
         ]);
     });

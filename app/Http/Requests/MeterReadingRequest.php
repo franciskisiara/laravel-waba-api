@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class StoreHouseRequest extends FormRequest
+class MeterReadingRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,11 +24,13 @@ class StoreHouseRequest extends FormRequest
     public function rules()
     {
         return [
-            'house_number' => [
+            'tenant_id' => [
                 'required',
-                Rule::unique('houses')->where(function ($query) {
-                    return $query->where('apartment_id', $this->apartment->id);
-                }),
+            ],
+
+            'current_reading' => [
+                'required',
+                'numeric'
             ],
         ];
     }

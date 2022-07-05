@@ -10,7 +10,9 @@ class MeterReading extends Model
     use HasFactory;
 
     protected $fillable = [
-        'house_id',
-        'reading',
+        'tenant_id',
+        'initial_reading',
+        'current_reading',
+        'communicated_at',
     ];
 }

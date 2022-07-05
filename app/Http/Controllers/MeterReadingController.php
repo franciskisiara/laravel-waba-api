@@ -2,84 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MeterReadingRequest;
 use App\Models\MeterReading;
 use Illuminate\Http\Request;
 
 class MeterReadingController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MeterReadingRequest $request)
     {
-        //
-    }
+        $previousReading = MeterReading::where([
+            'tenant_id' => $request->tenant_id
+        ])->orderBy('id', 'desc')->first();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\MeterReading  $meterReading
-     * @return \Illuminate\Http\Response
-     */
-    public function show(MeterReading $meterReading)
-    {
-        //
-    }
+        $currentReading = MeterReading::create([
+            'tenant_id' => $request->tenant_id,
+            'initial_reading' => $previousReading->current_reading,
+            'current_reading' => $request->current_reading,
+        ]); 
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\MeterReading  $meterReading
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(MeterReading $meterReading)
-    {
-        //
-    }
+        //add this reading to the queue in order to be processed at night
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\MeterReading  $meterReading
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, MeterReading $meterReading)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\MeterReading  $meterReading
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(MeterReading $meterReading)
-    {
-        //
+        return response()->json([
+            'data' => $currentReading,
+            'message' => 'Meter reading recorded. We will send pricing communication to the tenant'
+        ]);
     }
 }

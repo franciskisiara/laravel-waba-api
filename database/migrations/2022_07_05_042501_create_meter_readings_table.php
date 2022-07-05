@@ -15,8 +15,11 @@ return new class extends Migration
     {
         Schema::create('meter_readings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('house_id')->constrained('houses')->onDelete('cascade');
-            $table->double('reading');
+            $table->foreignId('tenant_id')->constrained('tenants')->onDelete('cascade');
+            $table->double('initial_reading')->nullable();
+            $table->double('current_reading');
+
+            $table->timestamp('communicated_at')->nullable();
             $table->timestamps();
         });
     }
