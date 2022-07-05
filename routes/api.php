@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApartmentController;
+use App\Http\Controllers\HouseController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -30,6 +31,10 @@ Route::post('token/generate', function (Request $request) {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('apartments', ApartmentController::class)->only([
+        'store',
+    ]);
+
+    Route::resource('houses', HouseController::class)->only([
         'store',
     ]);
 });
