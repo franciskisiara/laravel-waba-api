@@ -41,13 +41,13 @@ Route::middleware('auth:sanctum')->group(function () {
             'index', 'store',
         ]);
 
-        // Route::resource('tenants', TenantController::class)->only([
-        //     'store',
-        // ]);
+        Route::resource('tenants', TenantController::class)->only([
+            'index', 'store', 'destroy'
+        ]);
 
-        // Route::resource('meter-readings', MeterReadingController::class)->only([
-        //     'store',
-        // ]);
+        Route::resource('meter-readings', MeterReadingController::class)->only([
+            'store',
+        ]);
     });
 });
 

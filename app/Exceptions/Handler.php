@@ -2,7 +2,9 @@
 
 namespace App\Exceptions;
 
+use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -43,6 +45,19 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
+        $this->renderable(function (NotFoundHttpException $e, $request) {
+            $message = $e->getMessage();
+            $start = strrpos($message, "\\") + 1;
+            $record = substr($message, $start, strrpos($message, ']') - $start);
+
+            return response()->json([
+                'message' => "$record not found."
+            ], 404);
+        });
+
+
+        // strrpos("I love php, I love php too!","php")
+
         $this->reportable(function (Throwable $e) {
             //
         });

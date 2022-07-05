@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTenantRequest;
+use App\Models\Apartment;
 use App\Models\House;
 use App\Models\MeterReading;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class TenantController extends Controller
@@ -17,9 +19,18 @@ class TenantController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Apartment $apartment)
     {
-        //
+        $tenants = Tenant::whereHas('house.apartment', function ($query) use ($apartment) {
+            $query->where('apartments.id', $apartment->id);
+        })
+            ->paginate()
+            ->toArray();
+
+        return response()->json([
+            'data' => $tenants['data'],
+            'meta' => Arr::except($tenants, ['data'])
+        ]);
     }
 
     /**
@@ -28,7 +39,7 @@ class TenantController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTenantRequest $request)
+    public function store(StoreTenantRequest $request, Apartment $apartment)
     {
         $tenant = DB::transaction(function () use($request) {
             $user = User::firstOrCreate([
@@ -55,36 +66,17 @@ class TenantController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Tenant  $tenant
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Tenant $tenant)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Tenant  $tenant
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Tenant $tenant)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Tenant  $tenant
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tenant $tenant)
+    public function destroy(Apartment $apartment, Tenant $tenant)
     {
-        //
+        $tenant->delete();
+
+        return response()->json([
+            'message' => 'Tenant removed successfully',
+        ]);
     }
 }

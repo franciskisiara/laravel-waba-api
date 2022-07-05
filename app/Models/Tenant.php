@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Tenant extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'house_id',
@@ -28,5 +29,13 @@ class Tenant extends Model
     public function user ()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Relationship between the tenant and the meter readings
+     */
+    public function readings ()
+    {
+        return $this->hasMany(MeterReading::class, 'tenant_id');
     }
 }
