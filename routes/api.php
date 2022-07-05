@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApartmentController;
 use App\Http\Controllers\HouseController;
+use App\Http\Controllers\TenantController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -10,12 +11,12 @@ use Illuminate\Validation\ValidationException;
 
 Route::post('token/generate', function (Request $request) {
     $request->validate([
-        'email' => 'required|email',
+        'phone' => 'required',
         'password' => 'required',
         'device_name' => 'required',
     ]);
  
-    $user = User::where('email', $request->email)->first();
+    $user = User::where('phone', $request->phone)->first();
 
     if (! $user || ! Hash::check($request->password, $user->password)) {
         throw ValidationException::withMessages([
@@ -36,6 +37,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('apartments/{apartment}')->group(function () {
         Route::resource('houses', HouseController::class)->only([
+            'store',
+        ]);
+
+        Route::resource('tenants', TenantController::class)->only([
             'store',
         ]);
     });

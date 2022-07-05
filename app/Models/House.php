@@ -20,4 +20,20 @@ class House extends Model
     {
         return $this->belongsTo(Apartment::class, 'apartment_id');
     }
+
+    /**
+     * Relationship between a house and the tenant
+     */
+    public function tenants () 
+    {
+        return $this->belongsToMany(User::class, 'tenants', 'user_id', 'house_id');
+    }
+
+    /**
+     * Relationship between a house and the meter readings
+     */
+    public function readings ()
+    {
+        return $this->hasMany(MeterReading::class, 'house_id');
+    }
 }

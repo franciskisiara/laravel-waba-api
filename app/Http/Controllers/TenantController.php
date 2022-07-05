@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTenantRequest;
+use App\Models\House;
+use App\Models\MeterReading;
 use App\Models\Tenant;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TenantController extends Controller
 {
@@ -18,24 +23,35 @@ class TenantController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreTenantRequest $request)
     {
-        //
+        $tenant = DB::transaction(function () use($request) {
+            $user = User::firstOrCreate([
+                'phone' => $request->user['phone'],
+            ], $request->user);
+
+            $tenant = Tenant::create([
+                'user_id' => $user->id,
+                'house_id' => $request->house_id,
+            ]);
+
+            MeterReading::create([
+                'house_id' => $request->house_id,
+                'reading' => $request->meter_reading,
+            ]);
+
+            return $tenant;
+        });
+
+        return response()->json([
+            'data' => $tenant,
+            'message' => 'Tenant details saved successfully',
+        ]);
     }
 
     /**
@@ -45,17 +61,6 @@ class TenantController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Tenant $tenant)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Tenant  $tenant
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Tenant $tenant)
     {
         //
     }
