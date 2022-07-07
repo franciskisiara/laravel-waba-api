@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTenantRequest;
 use App\Models\Apartment;
-use App\Models\House;
 use App\Models\MeterReading;
 use App\Models\Tenant;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
