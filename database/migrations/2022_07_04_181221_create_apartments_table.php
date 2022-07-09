@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->foreignId('caretaker_id')->constrained('users')->onDelete('cascade');
             $table->integer('flat_rate_limit')->default(0);
-            $table->decimal('flat_rate', 4, 2)->default(0);
+            $table->decimal('flat_rate')->default(0);
             $table->decimal('unit_rate')->default(0);
             $table->timestamps();
 

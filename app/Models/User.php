@@ -41,4 +41,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Relationship between the user and the apartments they manage
+     */
+    public function apartments () 
+    {
+        return $this->hasMany(Apartment::class, 'caretaker_id');
+    }
 }

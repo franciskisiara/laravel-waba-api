@@ -21,12 +21,17 @@ class TokenController extends Controller
     
         if (! $user || ! Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
+                'phone' => ['The provided credentials are incorrect.'],
             ]);
         }
-     
+
         return response()->json([
-            'token' => $user->createToken($request->device_name)->plainTextToken,
+            'data' => [
+                'user' => $user,
+                'apartment' => $user->apartments()->first(),
+                'token' => $user->createToken($request->device_name)->plainTextToken,
+            ],
+
             'message' => 'Login successful'
         ]);
     }

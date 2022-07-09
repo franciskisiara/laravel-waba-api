@@ -29,16 +29,18 @@ class ApartmentRequest extends FormRequest
                 'required',
                 'string',
             ], 
-            'flat_rate_limit' => [
-                'numeric',
-            ],
-            'flat_rate' => [
-                'numeric',
-                Rule::requiredIf($this->flat_rate_limit > 0)
-            ], 
             'unit_rate' => [
                 'required',
                 'numeric'
+            ],
+            'flat_rate_limit' => [
+                'numeric',
+                'sometimes',
+            ],
+            'flat_rate' => [
+                'numeric',
+                'nullable',
+                Rule::requiredIf($this->flat_rate_limit > 0)
             ],
         ];
     }
