@@ -19,18 +19,18 @@ class RegisterController extends Controller
     {
         $user = $creator->create($request->all());
 
-        event(new Registered($user));
+        // event(new Registered($user));
 
-        $token = $user->createToken('default')->plainTextToken;
+        // $token = $user->createToken('default')->plainTextToken;
 
-        return response()->json([
-            'data' => [
-                'user' => $user,
-                'token' => $token,
-                'apartment' => $user->apartments()->first(),
-            ],
+        // return response()->json([
+        //     'data' => [
+        //         'user' => $user,
+        //         'token' => $token,
+        //         'apartment' => $user->apartments()->first(),
+        //     ],
 
-            'message' => 'Account created successfully'
-        ]);
+        //     'message' => 'Account created successfully'
+        // ]);
     }
 }

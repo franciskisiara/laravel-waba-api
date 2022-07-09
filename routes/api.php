@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApartmentController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\TokenController;
 use App\Http\Controllers\HouseController;
 use App\Http\Controllers\MeterReadingController;
@@ -9,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::post('token/generate', [TokenController::class, 'generate']);
+Route::post('register', [RegisterController::class, 'store']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('apartments', ApartmentController::class)->only([
