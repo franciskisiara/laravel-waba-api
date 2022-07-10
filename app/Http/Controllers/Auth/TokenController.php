@@ -12,16 +12,16 @@ class TokenController extends Controller
     public function generate (Request $request) 
     {
         $request->validate([
-            'phone' => 'required',
+            'username' => 'required',
             'password' => 'required',
             'device_name' => 'required',
         ]);
      
-        $user = User::where('phone', $request->phone)->first();
+        $user = User::where('username', $request->username)->first();
     
         if (! $user || ! Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
-                'phone' => ['The provided credentials are incorrect.'],
+                'username' => ['The provided credentials are incorrect.'],
             ]);
         }
 

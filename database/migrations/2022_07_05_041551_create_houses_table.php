@@ -17,7 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('house_number');
             $table->foreignId('apartment_id')->constrained('apartments')->onDelete('cascade');
+            $table->foreignId('tenant_id')->nullable()->constrained('users')->onDelete('cascade');
+            
             $table->timestamps();
+            $table->index(['house_number', 'apartment_id']);
         });
     }
 

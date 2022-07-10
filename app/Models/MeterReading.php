@@ -10,17 +10,17 @@ class MeterReading extends Model
     use HasFactory;
 
     protected $fillable = [
-        'tenant_id',
-        'initial_reading',
-        'current_reading',
+        'tenancy_id',
+        'ere_reading',
+        'aft_reading',
         'communicated_at',
     ];
 
     /**
-     * Relationship between the meter reading and the tenant
+     * Relationship between the meter reading and the tenancy
      */
-    public function tenant ()
+    public function tenancy ()
     {
-        return $this->belongsTo(Tenant::class, 'tenant_id');
+        return $this->belongsTo(Tenancy::class, 'tenancy_id');
     }
 }

@@ -5,7 +5,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\TokenController;
 use App\Http\Controllers\HouseController;
 use App\Http\Controllers\MeterReadingController;
-use App\Http\Controllers\TenantController;
+use App\Http\Controllers\TenancyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,8 +22,8 @@ Route::middleware('auth:sanctum')->group(function () {
             'index', 'store',
         ]);
 
-        Route::resource('tenants', TenantController::class)->only([
-            'index', 'store', 'destroy'
+        Route::resource('tenancies', TenancyController::class)->only([
+            'store', 'destroy'
         ]);
 
         Route::resource('meter-readings', MeterReadingController::class)->only([

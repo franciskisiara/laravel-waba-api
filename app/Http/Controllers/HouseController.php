@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreHouseRequest;
+use App\Http\Resources\HouseResourceCollection;
 use App\Models\Apartment;
 use App\Models\House;
 use Illuminate\Http\Request;
@@ -19,13 +20,9 @@ class HouseController extends Controller
     {
         $houses = House::where('apartment_id', $apartment->id)
             ->orderBy('house_number', 'asc')
-            ->paginate()
-            ->toArray();
+            ->paginate(10);
 
-        return response()->json([
-            'data' => $houses['data'],
-            'meta' => Arr::except($houses, ['data'])
-        ]);
+        return new HouseResourceCollection($houses);
     }
 
     /**
@@ -36,7 +33,7 @@ class HouseController extends Controller
      */
     public function store(StoreHouseRequest $request, Apartment $apartment)
     {
-        $house = House::create([
+        $house = House::updateOrCreate([
             'apartment_id' => $apartment->id,
             'house_number' => $request->house_number, 
         ]);

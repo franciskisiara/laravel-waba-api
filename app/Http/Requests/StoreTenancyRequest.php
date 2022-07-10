@@ -7,7 +7,7 @@ use App\Models\Tenant;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreTenantRequest extends FormRequest
+class StoreTenancyRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,29 +31,22 @@ class StoreTenantRequest extends FormRequest
                 'required',
                 Rule::exists(House::class, 'id'),
                 function ($attribute, $value, $fail) {
-                    $tenant = Tenant::where([
-                        'house_id' => $value,
-                        'deleted_at' => null,
-                    ])->first();
-
-                    if ($tenant) {
-                        $fail('The house has an active tenant');
+                    $house = House::find($value);
+                    if ($house->tenant) {
+                        $fail("House $house->house_number is currently occupied.");
                     }
                 }
             ],
 
-            'user' => [
-                'name' => [
-                    'required'
-                ],
-
-                'phone' => [
-                    'required',
-                    /** Starts with 254 for now */
-                ]
+            'tenant.name' => [
+                'required',
             ],
 
-            'current_reading' => [
+            'tenant.phone' => [
+                'required',
+            ],
+
+            'reading' => [
                 'required',
                 'numeric',
             ]

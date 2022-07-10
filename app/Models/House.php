@@ -10,7 +10,7 @@ class House extends Model
     use HasFactory;
 
     protected $fillable = [
-        'house_number', 'apartment_id'
+        'house_number', 'apartment_id', 'tenant_id',
     ];
 
     /**
@@ -22,18 +22,18 @@ class House extends Model
     }
 
     /**
-     * Relationship between a house and the tenant
+     * Relationship between a house and the current tenant
      */
-    public function tenants () 
+    public function tenant () 
     {
-        return $this->belongsToMany(User::class, 'tenants', 'user_id', 'house_id');
+        return $this->belongsTo(User::class, 'tenant_id');
     }
 
     /**
-     * Relationship between a house and the meter readings
+     * Relationship between a house and the tenancies
      */
-    public function readings ()
+    public function tenancies () 
     {
-        return $this->hasMany(MeterReading::class, 'house_id');
+        return $this->hasMany(Tenancy::class, 'house_id');
     }
 }
