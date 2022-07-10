@@ -7,9 +7,7 @@ use App\Models\Apartment;
 use App\Models\House;
 use App\Models\MeterReading;
 use App\Models\Tenancy;
-use App\Models\Tenant;
 use App\Models\User;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class TenancyController extends Controller
@@ -29,17 +27,13 @@ class TenancyController extends Controller
 
             $house = House::find($request->house_id);
 
-            $tenancy = $house->tenancies()->create([
-                'user_id' => $user->id,
-            ]);
+            $tenancy = $house->tenancies()->create(['user_id' => $user->id]);
 
-            $house->update([
-                'tenant_id' => $user->id
-            ]);
+            $house->update(['tenant_id' => $user->id]);
 
             MeterReading::create([
                 'tenancy_id' => $tenancy->id,
-                'aft_reading' => $request->reading,
+                'current_units' => $request->meter_reading,
             ]);
 
             return $tenancy;
@@ -54,12 +48,15 @@ class TenancyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Tenant  $tenant
+     * @param  \App\Models\Tenancy  $tenancy
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Apartment $apartment, Tenant $tenant)
+    public function destroy(Apartment $apartment, Tenancy $tenancy)
     {
-        $tenant->delete();
+        DB::transaction(function () use($tenancy) {
+            $tenancy->house->update(['tenant_id' => null]);
+            $tenancy->delete();
+        });
 
         return response()->json([
             'message' => 'Tenant removed successfully',

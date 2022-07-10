@@ -11,8 +11,8 @@ class MeterReading extends Model
 
     protected $fillable = [
         'tenancy_id',
-        'ere_reading',
-        'aft_reading',
+        'previous_units',
+        'current_units',
         'communicated_at',
     ];
 

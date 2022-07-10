@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\MeterReadingRequest;
 use App\Jobs\NotifyTenant;
 use App\Models\MeterReading;
+use Illuminate\Support\Facades\DB;
 
 class MeterReadingController extends Controller
 {
@@ -16,21 +17,25 @@ class MeterReadingController extends Controller
      */
     public function store(MeterReadingRequest $request)
     {
-        $previousReading = MeterReading::where([
-            'tenant_id' => $request->tenant_id
-        ])->orderBy('id', 'desc')->first();
+        $currentReading = DB::transaction(function () use($request) {
+            $previousReading = MeterReading::where([
+                'tenancy_id' => $request->tenancy_id
+            ])->orderBy('id', 'desc')->first();
 
-        $currentReading = MeterReading::create([
-            'tenant_id' => $request->tenant_id,
-            'initial_reading' => $previousReading->current_reading,
-            'current_reading' => $request->current_reading,
-        ]); 
+            $currentReading = MeterReading::create([
+                'tenancy_id' => $request->tenancy_id,
+                'current_units' => $request->meter_reading,
+                'previous_units' => $previousReading->current_units,
+            ]); 
+    
+            NotifyTenant::dispatch($currentReading);
 
-        NotifyTenant::dispatch($currentReading);
+            return $currentReading;
+        });
 
         return response()->json([
             'data' => $currentReading,
-            'message' => 'Meter reading recorded. We will send pricing communication to the tenant'
+            'message' => 'Meter reading recorded. Tenant will be notified'
         ]);
     }
 }

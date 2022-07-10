@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Library\SMS\AT;
 use App\Models\MeterReading;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -38,14 +39,22 @@ class NotifyTenant implements ShouldQueue
      */
     public function handle()
     {
-        $apartment = $this->reading->tenant->house->apartment;
+        $currentUnits = $this->reading->current_units;
+        $previousUnits = $this->reading->previous_units;
 
-        $initial = $this->reading->initial_reading;
-        $current = $this->reading->current_reading;
+        $consumption = $currentUnits - $previousUnits;
 
-        $units = $current - $initial;
+        $house = $this->reading->tenancy->house;
+        $tenantPhone = $house->tenant->phone;
+        $apartment = $house->apartment;
+        
+        $bill = $consumption <= $apartment->flat_rate_limit
+            ? $apartment->flat_rate
+            : $consumption * $apartment->unit_rate;
 
-        dd($apartment);
-        // $apartment = $this->reading->tenant->house->apartment;
+        (new AT)->send([
+            'to' => "+$tenantPhone",
+            'message' => "Water bill ksh $bill"
+        ]);
     }
 }

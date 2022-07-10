@@ -38,6 +38,11 @@ class StoreTenancyRequest extends FormRequest
                 }
             ],
 
+            'meter_reading' => [
+                'required',
+                'numeric',
+            ],
+
             'tenant.name' => [
                 'required',
             ],
@@ -45,11 +50,6 @@ class StoreTenancyRequest extends FormRequest
             'tenant.phone' => [
                 'required',
             ],
-
-            'reading' => [
-                'required',
-                'numeric',
-            ]
         ];
     }
 }

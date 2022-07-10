@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Tenancy;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MeterReadingRequest extends FormRequest
@@ -23,14 +24,29 @@ class MeterReadingRequest extends FormRequest
      */
     public function rules()
     {
+        $tenancy = Tenancy::withTrashed()
+            ->where('id', $this->tenancy_id)
+            ->firstOrFail();
+
         return [
-            'tenant_id' => [
+            'tenancy_id' => [
                 'required',
+                function ($attribute, $value, $fail) use($tenancy) {
+                    if ($tenancy->deleted_at != null) {
+                        $fail("You cannot record meter readings for an ended tenancy.");
+                    }
+                }
             ],
 
-            'current_reading' => [
+            'meter_reading' => [
                 'required',
-                'numeric'
+                'numeric',
+                function ($attribute, $value, $fail) use($tenancy) {
+                    $lastReading = $tenancy->readings()->orderBy('id', 'desc')->first();
+                    if ($value < $lastReading->current_units) {
+                        $fail("The current reading cannot be less that the previous reading.");
+                    }
+                }
             ],
         ];
     }
