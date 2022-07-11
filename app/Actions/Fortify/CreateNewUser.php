@@ -27,15 +27,11 @@ class CreateNewUser implements CreatesNewUsers
                 'string', 
                 'max:255'
             ],
-            'username' => [
-                'alpha',
+            'phone' => [
                 'required',
+
+                
                 Rule::unique(User::class),
-            ],
-            'password' => [
-                'required', 
-                'string', 
-                new Password,
             ],
         ])->validate();
 

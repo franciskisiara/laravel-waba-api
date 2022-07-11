@@ -19,18 +19,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'username',
         'phone',
-        'password',
-    ];
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
+        'phone_verified_at',
     ];
 
     /**
@@ -39,11 +29,10 @@ class User extends Authenticatable
      * @param  string  $value
      * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
-    protected function username(): Attribute
+    protected function phone(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => ucfirst($value),
-            set: fn ($value) => strtolower($value),
+            get: fn ($value) => "+$value",
         );
     }
 

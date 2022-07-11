@@ -9,6 +9,8 @@ use App\Http\Controllers\TenancyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+Route::post('code/generate', [CodeController::class, 'generate']);
+Route::post('code/verify', [CodeController::class, 'verify']);
 Route::post('token/generate', [TokenController::class, 'generate']);
 Route::post('register', [RegisterController::class, 'store']);
 

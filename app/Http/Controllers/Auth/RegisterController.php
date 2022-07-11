@@ -1,10 +1,8 @@
 <?php
 namespace App\Http\Controllers\Auth;
 
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\Request;
+use App\Http\Requests\RegisterRequest;
 use Illuminate\Routing\Controller;
-use Laravel\Fortify\Contracts\CreatesNewUsers;
 
 class RegisterController extends Controller
 {
@@ -12,10 +10,8 @@ class RegisterController extends Controller
      * Create a new registered user.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Laravel\Fortify\Contracts\CreatesNewUsers  $creator
-     * @return \Laravel\Fortify\Contracts\RegisterResponse
      */
-    public function store(Request $request, CreatesNewUsers $creator)
+    public function store(RegisterRequest $request)
     {
         $user = $creator->create($request->all());
 
