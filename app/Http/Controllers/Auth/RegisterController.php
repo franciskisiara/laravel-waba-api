@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Requests\RegisterRequest;
+use App\Models\User;
 use Illuminate\Routing\Controller;
 
 class RegisterController extends Controller
@@ -13,18 +14,28 @@ class RegisterController extends Controller
      */
     public function store(RegisterRequest $request)
     {
-        $user = $creator->create($request->all());
+        $user = User::create($request->only([
+            'name', 'phone'
+        ]));
 
-        $token = $user->createToken('default')->plainTextToken;
+        $code = rand(1000, 9999);
 
-        return response()->json([
-            'data' => [
-                'user' => $user,
-                'token' => $token,
-                'apartment' => $user->apartments()->first(),
-            ],
+        dd($code);
 
-            'message' => 'Account created successfully'
-        ]);
+        dd($request->all());
+
+        // $user = $creator->create($request->all());
+
+        // $token = $user->createToken('default')->plainTextToken;
+
+        // return response()->json([
+        //     'data' => [
+        //         'user' => $user,
+        //         'token' => $token,
+        //         'apartment' => $user->apartments()->first(),
+        //     ],
+
+        //     'message' => 'Account created successfully'
+        // ]);
     }
 }

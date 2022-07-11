@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApartmentController;
+use App\Http\Controllers\Auth\CodeController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\TokenController;
 use App\Http\Controllers\HouseController;
@@ -10,9 +11,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::post('code/generate', [CodeController::class, 'generate']);
-Route::post('code/verify', [CodeController::class, 'verify']);
-Route::post('token/generate', [TokenController::class, 'generate']);
+// Route::post('code/verify', [CodeController::class, 'verify']);
+// Route::post('token/generate', [TokenController::class, 'generate']);
 Route::post('register', [RegisterController::class, 'store']);
+Route::post('login', [RegisterController::class, 'store']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('apartments', ApartmentController::class)->only([

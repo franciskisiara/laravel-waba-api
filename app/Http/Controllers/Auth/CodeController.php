@@ -13,14 +13,18 @@ class CodeController extends Controller
      */
     public function generate () 
     {
+        // Validator::make($input, [
+        //     'name' => [
+        //         'required', 
+        //         'string', 
+        //         'max:255'
+        //     ],
+        //     'phone' => [
+        //         'required',
 
-    }
-
-    /**
-     * Verify the codes generated and sent to phone numbers
-     */
-    public function verify () 
-    {
-        
+                
+        //         Rule::unique(User::class),
+        //     ],
+        // ])->validate();
     }
 }
