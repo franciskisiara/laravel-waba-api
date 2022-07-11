@@ -1,9 +1,13 @@
 <?php
 namespace App\Http\Controllers\Auth;
 
+use App\Actions\VerificationCode;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redis;
 
 class RegisterController extends Controller
 {
@@ -14,28 +18,16 @@ class RegisterController extends Controller
      */
     public function store(RegisterRequest $request)
     {
-        $user = User::create($request->only([
-            'name', 'phone'
-        ]));
+        DB::transaction(function () use($request) {
+            $user = User::create($request->only([
+                'name', 'phone'
+            ]));
 
-        $code = rand(1000, 9999);
+            (new VerificationCode)->generate($user);
+        });
 
-        dd($code);
-
-        dd($request->all());
-
-        // $user = $creator->create($request->all());
-
-        // $token = $user->createToken('default')->plainTextToken;
-
-        // return response()->json([
-        //     'data' => [
-        //         'user' => $user,
-        //         'token' => $token,
-        //         'apartment' => $user->apartments()->first(),
-        //     ],
-
-        //     'message' => 'Account created successfully'
-        // ]);
+        return response()->json([
+            'message' => 'Waba account created successfully'
+        ]);
     }
 }
