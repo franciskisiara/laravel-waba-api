@@ -47,16 +47,17 @@ class Handler extends ExceptionHandler
     {
         $this->renderable(function (NotFoundHttpException $e, $request) {
             $message = $e->getMessage();
+
             $start = strrpos($message, "\\") + 1;
-            $record = substr($message, $start, strrpos($message, ']') - $start);
+            $ending = strrpos($message, ']') - $start;
+            $record = substr($message, $start, $ending);
+            $element = (bool) $record ? $record  : "Route '".$request->path()."'";
 
             return response()->json([
-                'message' => "$record not found."
+                'message' => "$element not found."
             ], 404);
         });
 
-
-        // strrpos("I love php, I love php too!","php")
 
         $this->reportable(function (Throwable $e) {
             //

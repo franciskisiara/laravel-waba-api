@@ -34,6 +34,12 @@ class VerificationCode
         $key = $this->redisKey($user);
         $hashedCode = Redis::get($key);
         Redis::del($key);
+
+        if (is_null($user->phone_verified_at)) {
+            $user->update([
+                'phone_verified_at' => now(),
+            ]);
+        }
         return Hash::check($code, $hashedCode);
     }
 }

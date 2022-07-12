@@ -3,13 +3,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Actions\VerificationCode;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\GenerateCodeRequest;
+use App\Http\Requests\Auth\GenerateCodeRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 
 class CodeController extends Controller
 {

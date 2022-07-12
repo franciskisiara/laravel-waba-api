@@ -2,12 +2,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Actions\VerificationCode;
-use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Redis;
 
 class RegisterController extends Controller
 {
@@ -18,16 +17,21 @@ class RegisterController extends Controller
      */
     public function store(RegisterRequest $request)
     {
-        DB::transaction(function () use($request) {
+        $user = DB::transaction(function () use($request) {
             $user = User::create($request->only([
                 'name', 'phone'
             ]));
 
             (new VerificationCode)->generate($user);
+
+            return $user;
         });
 
         return response()->json([
+            'data' => [
+                'user' => new UserResource($user),
+            ],
             'message' => 'Waba account created successfully'
-        ]);
+        ], 201);
     }
 }

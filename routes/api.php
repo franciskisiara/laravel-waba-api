@@ -4,7 +4,6 @@ use App\Http\Controllers\ApartmentController;
 use App\Http\Controllers\Auth\CodeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Auth\TokenController;
 use App\Http\Controllers\HouseController;
 use App\Http\Controllers\MeterReadingController;
 use App\Http\Controllers\TenancyController;
@@ -33,8 +32,4 @@ Route::middleware('auth:sanctum')->group(function () {
             'store',
         ]);
     });
-});
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
 });

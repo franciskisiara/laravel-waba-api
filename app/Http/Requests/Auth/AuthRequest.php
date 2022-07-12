@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
-class GenerateCodeRequest extends FormRequest
+class AuthRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,17 +31,17 @@ class GenerateCodeRequest extends FormRequest
         ]);
     }
 
-    /**
-     * Get custom attributes for validator errors.
-     *
-     * @return array
-     */
-    public function attributes()
-    {
-        return [
-            'phone' => 'phone number',
-        ];
-    }
+    // /**
+    //  * Get custom attributes for validator errors.
+    //  *
+    //  * @return array
+    //  */
+    // public function attributes()
+    // {
+    //     return [
+    //         'phone' => 'phone number',
+    //     ];
+    // }
 
     /**
      * Get the validation rules that apply to the request.
@@ -54,7 +54,6 @@ class GenerateCodeRequest extends FormRequest
             'phone' => [
                 'required',
                 'between:12,15',
-                Rule::exists(User::class, 'phone'),
                 function ($attribute, $value, $fail) {
                     if (!Str::startsWith($value, '254')) {
                         $fail("Unsupported country's phone number.");
