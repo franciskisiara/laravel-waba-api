@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreHouseRequest;
+use App\Http\Resources\HouseResource;
 use App\Http\Resources\HouseResourceCollection;
 use App\Models\Apartment;
 use App\Models\House;
@@ -39,7 +40,7 @@ class HouseController extends Controller
         ]);
 
         return response()->json([
-            'data' => $house,
+            'data' => new HouseResource($house),
             'message' => 'House details saved successfully',
         ]);
     }

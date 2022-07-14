@@ -3,13 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ApartmentRequest;
+use App\Http\Resources\ApartmentResource;
 use App\Models\Apartment;
-use Illuminate\Http\Request;
 
 class ApartmentController extends Controller
 {
-    
-
     /**
      * Store a newly created resource in storage.
      *
@@ -22,13 +20,13 @@ class ApartmentController extends Controller
 
         $apartment = Apartment::firstOrCreate([
             'caretaker_id' => $caretakerId,
-        ], array_merge($request->all(), [
-            'caretaker_id' => $caretakerId
+        ], $request->only([
+            'name', 'unit_rate', 'flat_rate', 'flat_rate_limit'
         ]));
 
         return response()->json([
-            'data' => $apartment,
-            'message' => 'Apartment saved successfully'
-        ]);
+            'data' => new ApartmentResource($apartment),
+            'message' => 'Apartment details saved successfully'
+        ], 201);
     }
 }

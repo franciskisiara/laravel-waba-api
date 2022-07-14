@@ -19,13 +19,13 @@ Route::middleware('auth:sanctum')->group(function () {
         'store',
     ]);
 
-    Route::prefix('apartments/{apartment}')->group(function () {
+    Route::middleware('caretaker')->prefix('apartments/{apartment}')->group(function () {
         Route::resource('houses', HouseController::class)->only([
             'index', 'store',
         ]);
 
         Route::resource('tenancies', TenancyController::class)->only([
-            'store', 'destroy'
+            'index', 'store', 'destroy'
         ]);
 
         Route::resource('meter-readings', MeterReadingController::class)->only([

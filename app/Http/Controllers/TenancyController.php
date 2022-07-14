@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTenancyRequest;
+use App\Http\Resources\TenancyResourceCollection;
 use App\Models\Apartment;
 use App\Models\House;
 use App\Models\MeterReading;
@@ -12,6 +13,22 @@ use Illuminate\Support\Facades\DB;
 
 class TenancyController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Apartment $apartment)
+    {
+        $tenancies = Tenancy::whereHas('house', function ($builder) use ($apartment) {
+            $builder->where('houses.apartment_id', $apartment->id);
+        })
+            ->orderBy('id', 'desc')
+            ->paginate(10);
+        
+        return new TenancyResourceCollection($tenancies);
+    }
+
     /**
      * Store a newly created resource in storage.
      *

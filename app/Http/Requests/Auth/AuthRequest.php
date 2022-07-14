@@ -31,18 +31,6 @@ class AuthRequest extends FormRequest
         ]);
     }
 
-    // /**
-    //  * Get custom attributes for validator errors.
-    //  *
-    //  * @return array
-    //  */
-    // public function attributes()
-    // {
-    //     return [
-    //         'phone' => 'phone number',
-    //     ];
-    // }
-
     /**
      * Get the validation rules that apply to the request.
      *

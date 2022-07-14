@@ -14,10 +14,12 @@ class GenerateCodeRequest extends AuthRequest
      */
     public function rules()
     {
+        $parentRules = parent::rules()['phone'];
+
         return [
-            'phone' => array_merge([
+            'phone' => array_merge($parentRules, [
                 Rule::exists(User::class),
-            ], parent::rules()['phone']),
+            ]),
         ];
     }
 }
