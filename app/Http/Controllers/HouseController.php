@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Filters\ApartmentFilter;
+use App\Http\Filters\HouseFilter;
 use App\Http\Requests\StoreHouseRequest;
 use App\Http\Resources\HouseResource;
 use App\Http\Resources\HouseResourceCollection;
@@ -9,6 +11,7 @@ use App\Models\Apartment;
 use App\Models\House;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class HouseController extends Controller
 {
@@ -19,7 +22,8 @@ class HouseController extends Controller
      */
     public function index(Apartment $apartment)
     {
-        $houses = House::where('apartment_id', $apartment->id)
+        $houses = osmose(HouseFilter::class)
+            ->with(['tenant'])
             ->orderBy('house_number', 'asc')
             ->paginate(10);
 
@@ -34,13 +38,17 @@ class HouseController extends Controller
      */
     public function store(StoreHouseRequest $request, Apartment $apartment)
     {
-        $house = House::updateOrCreate([
-            'apartment_id' => $apartment->id,
-            'house_number' => $request->house_number, 
-        ]);
+        $house = DB::transaction(function () use ($request, $apartment) {
+            $house = House::updateOrCreate([
+                'apartment_id' => $apartment->id,
+                'house_number' => str_replace(' ', '', strtoupper($request->house_number)),
+            ]);
+
+            return new HouseResource($house);
+        });
 
         return response()->json([
-            'data' => new HouseResource($house),
+            'data' => $house,
             'message' => 'House details saved successfully',
         ]);
     }

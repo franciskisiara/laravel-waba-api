@@ -7,10 +7,13 @@
     "require": {
         "php": "^8.0.2",
         "africastalking/africastalking": "^3.0",
+        "agog/osmose": "^2.1",
+        "algolia/algoliasearch-client-php": "^3.3",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/fortify": "^1.13",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^2.15",
+        "laravel/scout": "^9.4",
         "laravel/tinker": "^2.7",
         "predis/predis": "^2.0"
     },

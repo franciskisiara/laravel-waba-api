@@ -18,6 +18,18 @@ class StoreHouseRequest extends FormRequest
     }
 
     /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'house_number' => str_replace(' ', '', strtoupper($this->house_number)),
+        ]);
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, mixed>
@@ -27,9 +39,10 @@ class StoreHouseRequest extends FormRequest
         return [
             'house_number' => [
                 'required',
-                Rule::unique('houses')->where(function ($query) {
-                    return $query->where('apartment_id', $this->apartment->id);
-                }),
+                Rule::unique('houses', 'house_number')
+                    ->where(function ($query) {
+                        return $query->where('apartment_id', $this->apartment->id);
+                    }),
             ],
         ];
     }

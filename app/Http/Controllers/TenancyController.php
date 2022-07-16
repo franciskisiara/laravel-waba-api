@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Filters\TenancyFilter;
 use App\Http\Requests\StoreTenancyRequest;
+use App\Http\Resources\TenancyResource;
 use App\Http\Resources\TenancyResourceCollection;
 use App\Models\Apartment;
 use App\Models\House;
-use App\Models\MeterReading;
 use App\Models\Tenancy;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -20,11 +21,10 @@ class TenancyController extends Controller
      */
     public function index(Apartment $apartment)
     {
-        $tenancies = Tenancy::whereHas('house', function ($builder) use ($apartment) {
-            $builder->where('houses.apartment_id', $apartment->id);
-        })
+        $tenancies = osmose(TenancyFilter::class)
+            ->with(['tenant', 'house'])
             ->orderBy('id', 'desc')
-            ->paginate(10);
+            ->paginate(15);
         
         return new TenancyResourceCollection($tenancies);
     }
@@ -44,16 +44,19 @@ class TenancyController extends Controller
 
             $house = House::find($request->house_id);
 
-            $tenancy = $house->tenancies()->create(['user_id' => $user->id]);
+            $tenancy = $house->tenancies()->create([
+                'tenant_id' => $user->id
+            ]);
 
-            $house->update(['tenant_id' => $user->id]);
+            $house->update([
+                'tenant_id' => $user->id
+            ]);
 
-            MeterReading::create([
-                'tenancy_id' => $tenancy->id,
+            $tenancy->readings()->create([
                 'current_units' => $request->meter_reading,
             ]);
 
-            return $tenancy;
+            return new TenancyResource($tenancy);
         });
 
         return response()->json([
@@ -70,6 +73,14 @@ class TenancyController extends Controller
      */
     public function destroy(Apartment $apartment, Tenancy $tenancy)
     {
+        $tenancyApartment = $tenancy->house->apartment;
+
+        if ($tenancyApartment->id !== $apartment->id) {
+            return response()->json([
+                'message' => 'Tenancy does not exist'
+            ], 404);
+        }
+
         DB::transaction(function () use($tenancy) {
             $tenancy->house->update(['tenant_id' => null]);
             $tenancy->delete();

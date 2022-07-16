@@ -15,7 +15,7 @@ class RegisterController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      */
-    public function store(RegisterRequest $request)
+    public function register (RegisterRequest $request)
     {
         $user = DB::transaction(function () use($request) {
             $user = User::create($request->only([

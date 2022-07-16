@@ -15,7 +15,7 @@ class HouseResourceCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            "data" => HouseResource::collection($this->collection),
+            'data' => HouseResource::collection($this->collection),
         ];
     }
 }

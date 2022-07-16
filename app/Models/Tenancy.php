@@ -12,7 +12,7 @@ class Tenancy extends Model
 
     protected $fillable = [
         'house_id',
-        'user_id',
+        'tenant_id',
     ];
 
     /**
@@ -26,9 +26,9 @@ class Tenancy extends Model
     /**
      * Relationship between the tenancy and the tenant/user
      */
-    public function user ()
+    public function tenant ()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'tenant_id');
     }
 
     /**
