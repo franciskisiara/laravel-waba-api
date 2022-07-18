@@ -31,7 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
         ]);
 
         Route::resource('meter-readings', MeterReadingController::class)->only([
-            'store',
+            'index', 'store',
         ]);
     });
 });

@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Tenancy;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class MeterReadingRequest extends FormRequest
 {
@@ -24,15 +25,21 @@ class MeterReadingRequest extends FormRequest
      */
     public function rules()
     {
-        $tenancy = Tenancy::withTrashed()
-            ->where('id', $this->tenancy_id)
-            ->firstOrFail();
+        $tenancy = Tenancy::where('id', $this->tenancy_id)
+            ->whereHas('house.apartment', function ($builder) {
+                $builder->where('apartment_id', $this->apartment->id);
+            })
+            ->first();
 
         return [
             'tenancy_id' => [
                 'required',
                 function ($attribute, $value, $fail) use($tenancy) {
-                    if ($tenancy->deleted_at != null) {
+                    if (!$tenancy) {
+                        $fail("The selected tenancy does not exist.");
+                    }
+
+                    if ($tenancy && $tenancy->deleted_at != null) {
                         $fail("You cannot record meter readings for an ended tenancy.");
                     }
                 }
@@ -42,10 +49,13 @@ class MeterReadingRequest extends FormRequest
                 'required',
                 'numeric',
                 function ($attribute, $value, $fail) use($tenancy) {
-                    $lastReading = $tenancy->readings()->orderBy('id', 'desc')->first();
-                    if ($value < $lastReading->current_units) {
-                        $fail("The current reading cannot be less that the previous reading.");
-                    }
+                    if ($tenancy != null) {
+                        $lastReading = $tenancy->readings()->orderBy('id', 'desc')->first();
+                        
+                        if ($value < $lastReading->current_units) {
+                            $fail("The current reading cannot be less that the previous reading.");
+                        }
+                    } 
                 }
             ],
         ];

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('house_id')->constrained('houses')->onDelete('cascade');
             $table->foreignId('tenant_id')->constrained('users')->onDelete('cascade');
+            $table->decimal('running_balance', 8, 2)->default(0.00);
             $table->timestamps();
             $table->softDeletes();
         });

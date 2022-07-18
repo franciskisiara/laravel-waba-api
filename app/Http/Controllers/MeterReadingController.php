@@ -2,39 +2,63 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Billing\Biller;
+use App\Http\Filters\MeterReadingFilter;
 use App\Http\Requests\MeterReadingRequest;
+use App\Http\Resources\MeterReadingResource;
+use App\Http\Resources\MeterReadingResourceCollection;
 use App\Jobs\NotifyTenant;
+use App\Models\Apartment;
 use App\Models\MeterReading;
+use App\Models\Tenancy;
 use Illuminate\Support\Facades\DB;
 
 class MeterReadingController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Apartment $apartment)
+    {
+        $meterReadings = osmose(MeterReadingFilter::class)
+            ->whereNotNull('previous_units')
+            ->orderBy('id', 'desc')
+            ->paginate(15);
+        
+        return new MeterReadingResourceCollection($meterReadings);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(MeterReadingRequest $request)
+    public function store(MeterReadingRequest $request, Apartment $apartment)
     {
-        $currentReading = DB::transaction(function () use($request) {
-            $previousReading = MeterReading::where([
-                'tenancy_id' => $request->tenancy_id
-            ])->orderBy('id', 'desc')->first();
+        $meterReading = DB::transaction(function () use($request) {
+            $tenancy = Tenancy::find($request->tenancy_id);
+            $meterReading = $request->meter_reading;
 
-            $currentReading = MeterReading::create([
-                'tenancy_id' => $request->tenancy_id,
-                'current_units' => $request->meter_reading,
-                'previous_units' => $previousReading->current_units,
+            $biller = new Biller($tenancy, $meterReading);
+
+            $meterReading = MeterReading::create([
+                'tenancy_id' => $tenancy->id,
+                'current_units' => $meterReading,
+                'consumed_units' => $biller->consumption,
+                'previous_units' => $biller->previousMeterReading->current_units,
+                'bill' => json_encode($biller->calculate()),
             ]); 
     
-            NotifyTenant::dispatch($currentReading);
+            // NotifyTenant::dispatch($meterReading);
 
-            return $currentReading;
+            return new MeterReadingResource($meterReading);
         });
 
         return response()->json([
-            'data' => $currentReading,
+            'data' => $meterReading,
             'message' => 'Meter reading recorded. Tenant will be notified'
         ]);
     }

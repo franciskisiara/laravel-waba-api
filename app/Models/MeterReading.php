@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,8 +14,29 @@ class MeterReading extends Model
         'tenancy_id',
         'previous_units',
         'current_units',
-        'communicated_at',
+        'consumed_units',
+        'communication_status',
+        'bill',
     ];
+
+    /**
+     * Interact with the user's first name.
+     *
+     * @param  string  $value
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function communicationStatus(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                if (is_null($value)) {
+                    return 'pending';
+                } else {
+                    return (bool) $value ? 'delivered' : 'failed';
+                }
+            },
+        );
+    }
 
     /**
      * Relationship between the meter reading and the tenancy
