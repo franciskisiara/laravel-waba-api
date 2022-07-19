@@ -18,6 +18,7 @@ class TenancyResource extends JsonResource
             'id' => (int) $this->id,
             'house_id'=> (int) $this->house_id,
             'tenant_id' => (int) $this->tenant_id,
+            'running_balance' => $this->running_balance,
             'house' => new HouseResource($this->whenLoaded(('house'))),
             'tenant' => new UserResource($this->whenLoaded(('tenant'))),
         ];
