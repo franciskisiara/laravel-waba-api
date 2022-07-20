@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HouseController;
 use App\Http\Controllers\MeterReadingController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TenancyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::resource('meter-readings', MeterReadingController::class)->only([
             'index', 'store',
+        ]);
+
+        Route::resource('payments', PaymentController::class)->only([
+            'store',
         ]);
     });
 });

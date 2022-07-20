@@ -13,6 +13,7 @@ class Tenancy extends Model
     protected $fillable = [
         'house_id',
         'tenant_id',
+        'running_balance',
     ];
 
     /**
