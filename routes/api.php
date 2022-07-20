@@ -20,23 +20,23 @@ Route::middleware('auth:sanctum')->group(function () {
         'store',
     ]);
 
-    Route::middleware('caretaker')->prefix('apartments/{apartment}')->group(function () {
-        Route::patch('/', [ApartmentController::class, 'update']);
+    // Route::middleware('caretaker')->prefix('apartments/{apartment}')->group(function () {
+    //     Route::patch('/', [ApartmentController::class, 'update']);
 
-        Route::resource('houses', HouseController::class)->only([
-            'index', 'store',
-        ]);
+    //     Route::resource('houses', HouseController::class)->only([
+    //         'index', 'store',
+    //     ]);
 
-        Route::resource('tenancies', TenancyController::class)->only([
-            'index', 'store', 'destroy'
-        ]);
+    //     Route::resource('tenancies', TenancyController::class)->only([
+    //         'index', 'store', 'destroy'
+    //     ]);
 
-        Route::resource('meter-readings', MeterReadingController::class)->only([
-            'index', 'store',
-        ]);
+    //     Route::resource('meter-readings', MeterReadingController::class)->only([
+    //         'index', 'store',
+    //     ]);
 
-        Route::resource('payments', PaymentController::class)->only([
-            'store',
-        ]);
-    });
+    //     Route::resource('payments', PaymentController::class)->only([
+    //         'store',
+    //     ]);
+    // });
 });

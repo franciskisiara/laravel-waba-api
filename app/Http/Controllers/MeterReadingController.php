@@ -7,7 +7,6 @@ use App\Http\Filters\MeterReadingFilter;
 use App\Http\Requests\MeterReadingRequest;
 use App\Http\Resources\MeterReadingResource;
 use App\Http\Resources\MeterReadingResourceCollection;
-use App\Jobs\NotifyTenant;
 use App\Models\Apartment;
 use App\Models\MeterReading;
 use App\Models\Tenancy;
