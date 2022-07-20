@@ -53,9 +53,7 @@ class MeterReadingController extends Controller
                 'consumed_units' => $biller->consumption,
                 'previous_units' => $biller->previousMeterReading->current_units,
                 'bill' => json_encode($bill),
-            ]); 
-    
-            // NotifyTenant::dispatch($meterReading);
+            ]);
 
             return new MeterReadingResource($meterReading);
         });
