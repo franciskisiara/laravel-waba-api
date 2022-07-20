@@ -15,17 +15,13 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    'paths' => ['api/*',],
 
     'allowed_methods' => [
         'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS '
     ],
 
-    'allowed_origins' => [
-        'http://localhost:8080',
-        'http://127.0.0.1:8080',
-        'https://waba-api.rascan.co.ke'
-    ],
+    'allowed_origins' => ['*'],
 
     'allowed_origins_patterns' => [],
 
@@ -35,6 +31,5 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => true,
-
+    'supports_credentials' => false,
 ];
