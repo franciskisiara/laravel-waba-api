@@ -17,9 +17,7 @@ class AT
 
     public function send ($recipients) 
     {
-        $result = $this->sms->send($recipients);
-
-        // dd($result);
+        return $this->sms->send($recipients);
     }
 }
 

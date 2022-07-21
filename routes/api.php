@@ -8,8 +8,29 @@ use App\Http\Controllers\HouseController;
 use App\Http\Controllers\MeterReadingController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TenancyController;
-use Illuminate\Http\Request;
+use App\Library\SMS\AT;
+// use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+Route::get('canvas', function ($request) {
+    $at = new AT();
+    
+    $frank = $at->send([
+        'to' => '+254711887341',
+        'message' => 'Franko ... umeget'
+    ]);
+
+    $matis = $at->send([
+        'to' => '+254723258119',
+        'message' => 'Matis ... yumpy yump'
+    ]);
+
+    return response()->json(compact('frank', 'matis'))
+});
+
+Route::get('callback/at-delivery-reports', function ($request) {
+    dd($request->all());
+});
 
 Route::post('register', [RegisterController::class, 'register']);
 Route::post('code/generate', [CodeController::class, 'generate']);

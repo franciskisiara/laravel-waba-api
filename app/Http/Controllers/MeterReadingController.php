@@ -44,9 +44,6 @@ class MeterReadingController extends Controller
             $biller = new Biller($tenancy, $meterReading);
             $bill = $biller->calculate();
 
-            $balance = $tenancy->running_balance + $bill['total_charge'];
-            $tenancy->update(['running_balance' => $balance]);
-
             $meterReading = MeterReading::create([
                 'tenancy_id' => $tenancy->id,
                 'current_units' => $meterReading,
@@ -54,6 +51,9 @@ class MeterReadingController extends Controller
                 'previous_units' => $biller->previousMeterReading->current_units,
                 'bill' => json_encode($bill),
             ]);
+
+            $balance = $tenancy->running_balance + $bill['total_charge'];
+            $tenancy->update(['running_balance' => $balance]);
 
             return new MeterReadingResource($meterReading);
         });

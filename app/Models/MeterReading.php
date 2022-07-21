@@ -20,7 +20,7 @@ class MeterReading extends Model
     ];
 
     /**
-     * Interact with the user's first name.
+     * Interact with the meter readings communication status
      *
      * @param  string  $value
      * @return \Illuminate\Database\Eloquent\Casts\Attribute
