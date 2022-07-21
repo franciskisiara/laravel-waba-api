@@ -17,7 +17,7 @@ Route::get('/canvas', function () {
     $at = new AT();
 
     $frank = $at->send([
-        'to' => '+254711887341',
+        'to' => '+254723258119',
         'message' => 'Franko ... umeget'
     ]);
 
@@ -31,6 +31,15 @@ Route::get('/canvas', function () {
 
 Route::post('callback/at-delivery-reports', function () {
     Log::channel('slack')->info(json_encode(request()->all()));
+
+    // {
+    //     "phoneNumber": "+254711887341",
+    //     "failureReason": "UserInBlackList",
+    //     "retryCount": "0",
+    //     "id": "ATXid_18b050cb7eaf75eb692f9830a6178910",
+    //     "status": "Failed",
+    //     "networkCode": "63902"
+    //   }
 });
 
 Route::post('register', [RegisterController::class, 'register']);
