@@ -29,8 +29,8 @@ Route::get('/canvas', function () {
     return $frank;
 });
 
-Route::get('callback/at-delivery-reports', function ($request) {
-    Log::channel('slack')->info(json_encode($request->all()));
+Route::get('callback/at-delivery-reports', function () {
+    Log::channel('slack')->info(json_encode(request()->all()));
 });
 
 Route::post('register', [RegisterController::class, 'register']);
