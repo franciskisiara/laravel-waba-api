@@ -21,10 +21,10 @@ Route::get('/canvas', function () {
         'message' => 'Franko ... umeget'
     ]);
 
-    $matis = $at->send([
-        'to' => '+254723258119',
-        'message' => 'Matis ... yumpy yump'
-    ]);
+    // $matis = $at->send([
+    //     'to' => '+254723258119',
+    //     'message' => 'Matis ... yumpy yump'
+    // ]);
 
     return response()->json(compact('frank', 'matis'));
 });
