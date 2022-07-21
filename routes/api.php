@@ -9,10 +9,10 @@ use App\Http\Controllers\MeterReadingController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TenancyController;
 use App\Library\SMS\AT;
-// use Illuminate\Http\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/canvas', function ($request) {
+Route::get('/canvas', function () {
     $at = new AT();
 
     $frank = $at->send([
