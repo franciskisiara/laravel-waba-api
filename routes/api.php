@@ -29,7 +29,7 @@ Route::get('/canvas', function () {
     return $frank;
 });
 
-Route::get('callback/at-delivery-reports', function () {
+Route::post('callback/at-delivery-reports', function () {
     Log::channel('slack')->info(json_encode(request()->all()));
 });
 
