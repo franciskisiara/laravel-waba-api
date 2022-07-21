@@ -26,7 +26,7 @@ Route::get('/canvas', function () {
     //     'message' => 'Matis ... yumpy yump'
     // ]);
 
-    return response()->json(compact('frank', 'matis'));
+    return $frank;
 });
 
 Route::get('callback/at-delivery-reports', function ($request) {
