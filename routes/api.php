@@ -12,7 +12,7 @@ use App\Library\SMS\AT;
 // use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/api/canvas', function ($request) {
+Route::get('/canvas', function ($request) {
     $at = new AT();
 
     $frank = $at->send([
