@@ -7,6 +7,7 @@ use App\Http\Filters\MeterReadingFilter;
 use App\Http\Requests\MeterReadingRequest;
 use App\Http\Resources\MeterReadingResource;
 use App\Http\Resources\MeterReadingResourceCollection;
+use App\Jobs\SendWaterBill;
 use App\Models\Apartment;
 use App\Models\MeterReading;
 use App\Models\Tenancy;
@@ -54,6 +55,8 @@ class MeterReadingController extends Controller
 
             $balance = $tenancy->running_balance + $bill['total_charge'];
             $tenancy->update(['running_balance' => $balance]);
+
+            SendWaterBill::dispatch($meterReading)->afterCommit();
 
             return new MeterReadingResource($meterReading);
         });
