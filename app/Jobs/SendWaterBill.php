@@ -44,7 +44,7 @@ class SendWaterBill implements ShouldQueue
         $message = "Water bill kshs $bill->total_charge";
 
         $notification = (new AT)->send([
-            'to' => $this->reading->tenancy->tenant->phone,
+            'to' => $this->meterReading->tenancy->tenant->phone,
             'message' => $message,
         ]);
 
