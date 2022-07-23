@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HouseController;
 use App\Http\Controllers\MeterReadingController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\SmsCallbackController;
 use App\Http\Controllers\TenancyController;
 use App\Library\SMS\AT;
 use Illuminate\Http\Request;
@@ -29,18 +30,7 @@ Route::get('/canvas', function () {
     return $frank;
 });
 
-Route::post('callback/at-delivery-reports', function () {
-    Log::channel('slack')->info(json_encode(request()->all()));
-
-    // {
-    //     "phoneNumber": "+254711887341",
-    //     "failureReason": "UserInBlackList",
-    //     "retryCount": "0",
-    //     "id": "ATXid_18b050cb7eaf75eb692f9830a6178910",
-    //     "status": "Failed",
-    //     "networkCode": "63902"
-    //   }
-});
+Route::post('callback/deliveries', [SmsCallbackController::class, 'delivery']);
 
 Route::post('register', [RegisterController::class, 'register']);
 Route::post('code/generate', [CodeController::class, 'generate']);

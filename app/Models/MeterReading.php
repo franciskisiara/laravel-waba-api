@@ -15,28 +15,11 @@ class MeterReading extends Model
         'previous_units',
         'current_units',
         'consumed_units',
-        'communication_status',
         'bill',
+        'bill_description',
+        'bill_delivery_id',
+        'bill_delivery_status',
     ];
-
-    /**
-     * Interact with the meter readings communication status
-     *
-     * @param  string  $value
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
-     */
-    protected function communicationStatus(): Attribute
-    {
-        return Attribute::make(
-            get: function ($value) {
-                if (is_null($value)) {
-                    return 'pending';
-                } else {
-                    return (bool) $value ? 'delivered' : 'failed';
-                }
-            },
-        );
-    }
 
     /**
      * Relationship between the meter reading and the tenancy

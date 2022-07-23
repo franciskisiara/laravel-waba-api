@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Library\SMS\AT;
 use App\Models\MeterReading;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class SendBillsCommand extends Command
 {
@@ -30,7 +31,7 @@ class SendBillsCommand extends Command
     public function handle()
     {
         MeterReading::whereNotNull('bill')
-            ->whereNull('communication_status')
+            ->where('bill_delivery_status', 'pending')
             ->whereBetween('created_at', [
                 now()->startOfMonth(),
                 now()->endOfMonth(),
@@ -39,16 +40,22 @@ class SendBillsCommand extends Command
             ->chunk(10, function ($readings) use(&$invoices) {
                 foreach ($readings as $reading) {
                     $bill = json_decode($reading->bill);
-                    
+                    $message = "Water bill kshs $bill->total_charge";
+
                     $result = (new AT)->send([
                         'to' => $reading->tenancy->tenant->phone,
-                        'message' => "Water bill kshs $bill->total_charge",
+                        'message' => $message,
                     ]);
 
-                    dd($result);
+                    $messageId = $result['data']->SMSMessageData->Recipients[0]->messageId;
+
+                    Log::info(json_encode($messageId));
+
+                    $reading->update([
+                        'bill_delivery_id' => $messageId,
+                        'bill_description' => $message,
+                    ]);
                 }
             });
-
-        
     }
 }

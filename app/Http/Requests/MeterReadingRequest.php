@@ -52,15 +52,18 @@ class MeterReadingRequest extends FormRequest
                     if ($tenancy != null) {     
                         $readings = $tenancy->readings()->orderBy('id', 'desc');
 
-                        $monthReading = $readings->get()->first(function ($reading, $key) {
-                            return $reading->created_at->month == now()->month;
-                        });
-
+                        $monthReading = $readings->clone()->whereNotNull('previous_units')
+                            ->whereBetween('created_at', [
+                                now()->startOfMonth(),
+                                now()->endOfMonth(),
+                            ])
+                            ->first();
+                        
                         if (!is_null($monthReading)) {
                             $fail("You have already recorded this month's reading.");
                         }
 
-                        if ($value < $readings->first()->current_units) {
+                        if ($value < $readings->clone()->first()->current_units) {
                             $fail("The current reading cannot be less that the previous reading.");
                         }
                     } 

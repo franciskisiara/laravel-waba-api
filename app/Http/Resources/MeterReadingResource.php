@@ -14,9 +14,6 @@ class MeterReadingResource extends JsonResource
      */
     public function toArray($request)
     {
-        $tenant = $this->tenancy->tenant;
-        $house = $this->tenancy->house;
-
         return [
             'id' => (int) $this->id,
             'tenancy_id' => (int) $this->id,
@@ -24,8 +21,13 @@ class MeterReadingResource extends JsonResource
             'current_units' => $this->current_units,
             'consumed_units' => $this->consumed_units,
             'bill' => json_decode($this->bill),
-            'communication_status' => $this->communication_status,
-            'occupancy' => "$tenant->name - $house->house_number",
+            'bill_delivery_id' => $this->bill_delivery_id,
+            'bill_description' => $this->bill_description,
+            'bill_delivery_status' => $this->bill_delivery_status,
+            'created_at' => $this->created_at->toFormattedDateString(),
+
+            'tenant' => $this->tenancy->tenant,
+            'house' => $this->tenancy->house,
         ];
     }
 }

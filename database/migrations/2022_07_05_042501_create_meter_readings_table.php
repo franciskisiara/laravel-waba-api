@@ -19,8 +19,12 @@ return new class extends Migration
             $table->double('previous_units', 10, 2)->nullable();
             $table->double('current_units', 10, 2);
             $table->double('consumed_units', 10, 2)->nullable();
-            $table->boolean('communication_status')->nullable();
             $table->json('bill')->nullable();
+            $table->string('bill_description')->nullable();
+            $table->string('bill_delivery_id')->nullable();
+            $table->enum('bill_delivery_status', [
+                'pending', 'success', 'failed', 
+            ])->default('pending');
             $table->timestamps();
         });
     }
