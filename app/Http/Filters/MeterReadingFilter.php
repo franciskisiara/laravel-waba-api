@@ -13,8 +13,14 @@ class MeterReadingFilter extends OsmoseFilter implements OsmoseFilterInterface
      */
     public function bound () :array
     {
-        return [
+        $apartment = request()->route('apartment');
 
+        return [
+            function ($query) use($apartment) {
+                return $query->whereHas('tenancy.house', function ($builder) use($apartment) {
+                    $builder->where('houses.apartment_id', $apartment->id);
+                });
+            }
         ];
     }
 
