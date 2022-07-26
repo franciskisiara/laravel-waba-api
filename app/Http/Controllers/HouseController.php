@@ -25,7 +25,7 @@ class HouseController extends Controller
         $houses = osmose(HouseFilter::class)
             ->with(['tenant'])
             ->orderBy('house_number', 'asc')
-            ->paginate(10);
+            ->paginate(25);
 
         return new HouseResourceCollection($houses);
     }
